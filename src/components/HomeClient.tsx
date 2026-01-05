@@ -9,24 +9,28 @@ import ToolCard from "@/components/ToolCard";
 import { Tool } from "@/lib/blogger";
 import Fuse from "fuse.js";
 import {
-    ChevronRight, LayoutGrid, PenTool, Image as ImageIcon, Video,
-    BookOpen, Briefcase, Zap, MessageSquare, Code, Rocket, Sparkles, Star
+    ChevronRight, LayoutGrid, Flame, PenTool, Image as ImageIcon, Video,
+    Briefcase, Zap, MessageSquare, Code, Rocket, Sparkles, Star, ArrowRight,
+    Palette, Music, Search, Globe
 } from "lucide-react";
 
 interface HomeClientProps {
     initialTools: Tool[];
 }
 
-const CATEGORIES_DATA = [
-    { id: "all", label: "Tất cả", icon: <LayoutGrid size={16} /> },
-    { id: "chatbot", label: "Chatbot", icon: <MessageSquare size={16} /> },
-    { id: "content", label: "Viết lách", icon: <PenTool size={16} /> },
-    { id: "image", label: "Hình ảnh", icon: <ImageIcon size={16} /> },
-    { id: "video", label: "Video", icon: <Video size={16} /> },
-    { id: "coding", label: "Lập trình", icon: <Code size={16} /> },
-    { id: "office", label: "Văn phòng", icon: <Briefcase size={16} /> },
-    { id: "learning", label: "Giáo dục", icon: <BookOpen size={16} /> },
-    { id: "assistant", label: "Agents", icon: <Zap size={16} /> },
+const CATEGORIES_CONFIG = [
+    { id: "hot", label: "Ai Hot", icon: <Flame size={20} className="text-orange-500" />, keywords: ['hot', 'trend'] },
+    { id: "content", label: "Viết nội dung", icon: <PenTool size={20} className="text-blue-500" />, keywords: ['viết', 'content', 'văn bản'] },
+    { id: "image", label: "Hình ảnh", icon: <ImageIcon size={20} className="text-purple-500" />, keywords: ['ảnh', 'image', 'vẽ'] },
+    { id: "video", label: "Video", icon: <Video size={20} className="text-red-500" />, keywords: ['video', 'clip', 'phim'] },
+    { id: "office", label: "Văn phòng", icon: <Briefcase size={20} className="text-emerald-500" />, keywords: ['văn phòng', 'office', 'tăng năng suất'] },
+    { id: "assistant", label: "Trợ lý & Agent", icon: <Zap size={20} className="text-yellow-500" />, keywords: ['trợ lý', 'assistant', 'agent'] },
+    { id: "chatbot", label: "Chatbot", icon: <MessageSquare size={20} className="text-indigo-500" />, keywords: ['chatbot', 'gpt', 'chat'] },
+    { id: "coding", label: "Lập trình", icon: <Code size={20} className="text-slate-600" />, keywords: ['code', 'lập trình', 'dev'] },
+    { id: "design", label: "Thiết kế", icon: <Palette size={20} className="text-pink-500" />, keywords: ['thiết kế', 'design', 'ui', 'ux'] },
+    { id: "audio", label: "Âm thanh", icon: <Music size={20} className="text-cyan-500" />, keywords: ['âm thanh', 'audio', 'nhạc'] },
+    { id: "search", label: "Tìm kiếm", icon: <Search size={20} className="text-sky-500" />, keywords: ['tìm kiếm', 'search'] },
+    { id: "platform", label: "Nền tảng AI", icon: <Globe size={20} className="text-amber-500" />, keywords: ['nền tảng', 'platform', 'hệ sinh thái'] },
 ];
 
 export default function HomeClient({ initialTools }: HomeClientProps) {
@@ -39,37 +43,60 @@ export default function HomeClient({ initialTools }: HomeClientProps) {
     }), [initialTools]);
 
     const filteredTools = useMemo(() => {
-        let result = initialTools;
+        if (!searchTerm) return initialTools;
+        const searchResult = fuse.search(searchTerm);
+        return searchResult.map((res: any) => res.item);
+    }, [searchTerm, initialTools, fuse]);
 
-        if (activeCategory !== "all") {
-            const categoryMap: Record<string, string[]> = {
-                'content': ['viết', 'content', 'copywriting', 'văn bản'],
-                'image': ['ảnh', 'image', 'vẽ', 'chụp'],
-                'video': ['video', 'phim', 'clip'],
-                'learning': ['học', 'tài liệu', 'nghiên cứu', 'khoa học'],
-                'office': ['văn phòng', 'office', 'công việc', 'work'],
-                'assistant': ['trợ lý', 'assistant', 'agent', 'zapier'],
-                'chatbot': ['chatbot', 'gpt', 'hội thoại'],
-                'coding': ['code', 'lập trình', 'developer', 'github'],
-            };
-            const keywords = categoryMap[activeCategory] || [activeCategory];
-            result = result.filter(tool =>
-                tool.categories.some(cat =>
-                    keywords.some(key => cat.toLowerCase().includes(key.toLowerCase()))
-                )
-            );
-        }
+    const renderToolsInSection = (sectionId: string, label: string, icon: any, keywords: string[]) => {
+        const tools = initialTools.filter(tool =>
+            tool.categories.some(cat =>
+                keywords.some(key => cat.toLowerCase().includes(key.toLowerCase()))
+            )
+        ).slice(0, 12);
 
-        if (searchTerm) {
-            const searchResult = fuse.search(searchTerm);
-            result = searchResult.map((res: any) => res.item);
-        }
+        if (tools.length === 0) return null;
 
-        return result;
-    }, [searchTerm, activeCategory, initialTools, fuse]);
+        return (
+            <div key={sectionId} className="mb-14">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 px-2 gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-8 bg-brand-blue-deep rounded-full"></span>
+                            <h2 className="text-2xl font-black text-slate-800 tracking-tight uppercase">{label}</h2>
+                        </div>
+                        {sectionId === 'hot' && (
+                            <button className="bg-brand-orange text-white text-[10px] font-black px-4 py-2 rounded-xl flex items-center gap-2 hover:brightness-110 shadow-lg shadow-orange-100 transition-all">
+                                LẬP TỨC TRUY CẬP <ArrowRight size={14} />
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="flex items-center gap-6">
+                        {sectionId === 'hot' && (
+                            <div className="bg-white px-4 py-2 rounded-2xl border border-slate-100 flex items-center gap-2 shadow-sm">
+                                <span className="animate-bounce">🔥</span>
+                                <span className="text-[11px] font-bold text-slate-400">Tin hot: Google vừa cập nhật Gemini 1.5 Pro cực mạnh...</span>
+                            </div>
+                        )}
+                        <Link href="#" className="text-brand-blue-deep font-bold text-[13px] hover:text-brand-orange transition-colors flex items-center gap-1 group">
+                            Xem thêm ({tools.length})
+                            <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </Link>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
+                    {tools.map((tool) => (
+                        <ToolCard key={tool.id} tool={tool} />
+                    ))}
+                </div>
+            </div>
+        );
+    };
 
     return (
-        <div className="flex flex-col min-h-screen bg-slate-50">
+        <div className="flex flex-col min-h-screen bg-[#F0F2F5]">
             <Header />
 
             <main className="flex-grow flex flex-col">
@@ -78,79 +105,86 @@ export default function HomeClient({ initialTools }: HomeClientProps) {
                 <div className="max-w-[1920px] w-full mx-auto flex flex-1">
                     <Sidebar
                         activeCategory={activeCategory}
-                        onSelectCategory={setActiveCategory}
+                        onSelectCategory={(id) => {
+                            setActiveCategory(id);
+                            // Scroll down slightly or filter logic
+                        }}
                     />
 
-                    <section className="flex-1 p-4 md:p-8">
-                        {/* Horizontal Categories Bar */}
-                        <div className="bg-white p-2 rounded-2xl mb-8 border border-slate-100 shadow-sm overflow-x-auto scrollbar-none flex items-center gap-2">
-                            {CATEGORIES_DATA.map((cat) => (
-                                <button
-                                    key={cat.id}
-                                    onClick={() => setActiveCategory(cat.id)}
-                                    className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all whitespace-nowrap ${activeCategory === cat.id
-                                            ? "bg-brand-blue-deep text-white shadow-md shadow-blue-200"
-                                            : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                                        }`}
-                                >
-                                    {cat.icon}
-                                    {cat.label.toUpperCase()}
-                                </button>
-                            ))}
-                        </div>
-
-                        {/* Section Header */}
-                        <div className="flex items-center justify-between mb-8 px-2">
-                            <div className="flex items-center gap-4">
-                                <div className="w-1.5 h-8 bg-brand-orange rounded-full"></div>
-                                <h2 className="text-2xl font-black text-slate-800 uppercase tracking-tight">
-                                    {activeCategory === 'all' ? 'Tất cả công cụ' : CATEGORIES_DATA.find(c => c.id === activeCategory)?.label}
-                                    <span className="ml-3 text-slate-300 text-sm font-black bg-slate-100 px-2 py-1 rounded-lg">
-                                        {filteredTools.length}
-                                    </span>
-                                </h2>
-                            </div>
-                        </div>
-
-                        {/* Tools Grid (Adjusted to 5-6 columns) */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
-                            {filteredTools.map((tool) => (
-                                <ToolCard key={tool.id} tool={tool} />
-                            ))}
-
-                            {filteredTools.length === 0 && (
-                                <div className="col-span-full py-40 flex flex-col items-center animate-in fade-in zoom-in duration-500">
-                                    <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-5xl mb-6 grayscale opacity-50">
-                                        🔍
-                                    </div>
-                                    <h3 className="text-xl font-black text-slate-700">Rất tiếc, không tìm thấy kết quả</h3>
-                                    <button
-                                        onClick={() => { setSearchTerm(""); setActiveCategory("all") }}
-                                        className="mt-6 px-6 py-2 bg-brand-blue-deep text-white text-xs font-black rounded-xl hover:scale-105 transition-all"
-                                    >
-                                        XÓA TẤT CẢ BỘ LỌC
-                                    </button>
+                    <section className="flex-1 p-4 md:p-6 lg:p-10">
+                        {searchTerm ? (
+                            <div>
+                                <div className="flex items-center justify-between mb-8 px-2">
+                                    <h2 className="text-2xl font-black text-slate-800 uppercase">
+                                        Kết quả cho "{searchTerm}"
+                                    </h2>
                                 </div>
-                            )}
-                        </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
+                                    {filteredTools.map((tool) => (
+                                        <ToolCard key={tool.id} tool={tool} />
+                                    ))}
+                                </div>
+                            </div>
+                        ) : activeCategory === "all" ? (
+                            <>
+                                {/* Show all grouped sections for Home page */}
+                                {CATEGORIES_CONFIG.map(cat =>
+                                    renderToolsInSection(cat.id, cat.label, cat.icon, cat.keywords)
+                                )}
+                            </>
+                        ) : (
+                            /* Show specific category as a section */
+                            renderToolsInSection(
+                                activeCategory,
+                                CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.label || activeCategory,
+                                CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.icon,
+                                CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.keywords || [activeCategory]
+                            )
+                        )}
+
+                        {searchTerm && filteredTools.length === 0 && (
+                            <div className="col-span-full py-40 flex flex-col items-center">
+                                <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-5xl mb-6 grayscale opacity-50">🔍</div>
+                                <h3 className="text-xl font-black text-slate-700">Rất tiếc, không tìm thấy kết quả</h3>
+                                <button
+                                    onClick={() => setSearchTerm("")}
+                                    className="mt-6 px-6 py-2 bg-brand-blue-deep text-white text-xs font-black rounded-xl hover:scale-105 transition-all"
+                                >
+                                    XÓA TÌM KIẾM
+                                </button>
+                            </div>
+                        )}
                     </section>
                 </div>
             </main>
 
-            <footer className="bg-white border-t border-slate-100 py-10">
-                <div className="max-w-[1920px] mx-auto px-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] font-black text-slate-400">
-                    <div className="flex items-center gap-4">
-                        <span className="text-brand-blue-deep">VIỆT-AI.ONLINE</span>
-                        <span>© 2026 KSMART ECOSYSTEM</span>
-                    </div>
-                    <div className="flex gap-8">
-                        <span className="hover:text-brand-orange cursor-pointer">FACEBOOK</span>
-                        <span className="hover:text-brand-orange cursor-pointer">ZALO</span>
-                        <span className="hover:text-brand-orange cursor-pointer">YOUTUBE</span>
-                        <span className="hover:text-brand-orange cursor-pointer">CỘNG ĐỒNG</span>
+            {/* Floating Contact/Menu Button */}
+            <button className="fixed bottom-10 right-10 w-16 h-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50 md:hidden">
+                <div className="flex flex-col gap-1 items-center">
+                    <div className="w-6 h-[3px] bg-white rounded-full"></div>
+                    <div className="w-6 h-[3px] bg-white rounded-full"></div>
+                    <div className="w-6 h-[3px] bg-white rounded-full"></div>
+                </div>
+            </button>
+
+            {/* Event Popup */}
+            <div className="fixed bottom-6 right-6 w-[350px] bg-white rounded-3xl shadow-2xl z-[100] border border-slate-100 overflow-hidden animate-in slide-in-from-right duration-700 hidden lg:block">
+                <div className="relative aspect-video">
+                    <img src="https://i.ibb.co/6R2M7n7M/Screenshot-2025-12-29-215033.png" alt="Event" className="w-full h-full object-cover" />
+                    <button className="absolute top-3 right-3 w-6 h-6 bg-black/20 hover:bg-black/40 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all">
+                        ×
+                    </button>
+                </div>
+                <div className="p-5">
+                    <h4 className="font-extrabold text-slate-800 mb-4 text-[15px]">
+                        [Sự kiện] Kết nối AI & Công nghệ 2026
+                    </h4>
+                    <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg">2025-12-26</span>
+                        <button className="text-[11px] font-black border border-slate-200 px-4 py-1.5 rounded-full hover:bg-slate-50 transition-all">Đăng ký ngay</button>
                     </div>
                 </div>
-            </footer>
+            </div>
         </div>
     );
 }

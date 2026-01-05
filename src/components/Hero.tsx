@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Search, Sparkles } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface HeroProps {
     onSearch: (term: string) => void;
 }
 
 export default function Hero({ onSearch }: HeroProps) {
-    const [activeTab, setActiveTab] = useState("web");
+    const [activeTab, setActiveTab] = useState("google");
     const [inputValue, setInputValue] = useState("");
 
     const handleSearch = () => {
@@ -16,70 +16,77 @@ export default function Hero({ onSearch }: HeroProps) {
     };
 
     return (
-        <section className="px-5 md:px-10 pt-5 pb-8">
-            <div className="bg-hero-gradient rounded-3xl overflow-hidden relative shadow-2xl">
-                {/* Decorative Circles */}
-                <div className="absolute -top-20 -left-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-white/5 rounded-full blur-3xl pointer-events-none"></div>
+        <section className="p-4 md:p-6 lg:p-10 bg-[#eaedf1]">
+            <div className="bg-hero-gradient rounded-[40px] overflow-hidden relative shadow-2xl min-h-[400px] flex flex-col items-center justify-center py-16 px-6">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
+                    <div className="absolute top-[10%] left-[5%] w-60 h-60 bg-white rounded-full blur-[100px]"></div>
+                    <div className="absolute bottom-[10%] right-[5%] w-80 h-80 bg-blue-400 rounded-full blur-[120px]"></div>
+                </div>
 
-                <div className="max-w-[1000px] mx-auto py-16 px-6 relative z-10 flex flex-col items-center">
-                    <h1 className="text-3xl md:text-5xl font-black text-white text-center mb-10 tracking-tight leading-tight">
-                        Khám phá 500+ công cụ AI <br className="hidden md:block" />
-                        hàng đầu cho hiệu suất đỉnh cao
+                <div className="relative z-10 w-full max-w-[900px] text-center">
+                    <h1 className="text-4xl md:text-6xl font-black text-white mb-12 tracking-tight">
+                        Triệu người tin dùng Thư viện công cụ AI
                     </h1>
 
-                    <div className="w-full max-w-[700px]">
-                        {/* Search Tabs */}
-                        <div className="flex justify-center gap-1 mb-0 relative z-20">
+                    <div className="flex flex-col items-center">
+                        {/* Search Tabs Overlaying Search Bar */}
+                        <div className="flex items-center gap-1 mb-[-2px] relative z-20">
                             <button
-                                onClick={() => setActiveTab("web")}
-                                className={`px-6 md:px-8 py-3 rounded-t-2xl font-bold text-sm transition-all ${activeTab === "web" ? "bg-white text-slate-800" : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-md"}`}
+                                onClick={() => setActiveTab("google")}
+                                className={`px-10 py-3 rounded-t-2xl font-black text-sm transition-all ${activeTab === "google" ? "bg-white text-slate-800" : "bg-white/20 text-white/80 hover:bg-white/30 backdrop-blur-md"}`}
                             >
-                                WEBSITE
+                                Google
                             </button>
                             <button
-                                onClick={() => setActiveTab("app")}
-                                className={`px-6 md:px-8 py-3 rounded-t-2xl font-bold text-sm transition-all ${activeTab === "app" ? "bg-white text-slate-800" : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-md"}`}
+                                onClick={() => setActiveTab("guide")}
+                                className={`px-10 py-3 rounded-t-2xl font-black text-sm transition-all ${activeTab === "guide" ? "bg-white text-slate-800" : "bg-white/20 text-white/80 hover:bg-white/30 backdrop-blur-md"}`}
                             >
-                                APP/APK
-                            </button>
-                            <button
-                                onClick={() => setActiveTab("plugin")}
-                                className={`hidden sm:block px-6 md:px-8 py-3 rounded-t-2xl font-bold text-sm transition-all ${activeTab === "plugin" ? "bg-white text-slate-800" : "bg-white/20 text-white hover:bg-white/30 backdrop-blur-md"}`}
-                            >
-                                PLUGIN
+                                Hướng dẫn
                             </button>
                         </div>
 
-                        {/* Search Bar Wrapper */}
-                        <div className="relative group">
-                            <input
-                                type="text"
-                                placeholder="Bạn đang tìm kiếm công cụ gì?"
-                                className={`w-full bg-white h-[60px] md:h-[70px] ${activeTab === "web" ? "rounded-r-2xl rounded-bl-2xl" : "rounded-2xl"} px-8 pr-32 md:pr-40 text-slate-700 outline-none shadow-xl text-lg transition-all focus:ring-4 focus:ring-brand-blue-light/20`}
-                                value={inputValue}
-                                onChange={(e) => setInputValue(e.target.value)}
-                                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                            />
-                            <button
-                                onClick={handleSearch}
-                                className="absolute right-2 top-2 bottom-2 bg-brand-orange px-6 md:px-10 rounded-xl text-white font-black hover:scale-105 active:scale-95 transition-all flex items-center gap-2 shadow-lg shadow-brand-orange/30 group-hover:brightness-110"
-                            >
-                                <Search size={22} />
-                                <span className="hidden sm:inline">TÌM KIẾM</span>
-                            </button>
-                        </div>
-
-                        {/* HOT Tags */}
-                        <div className="flex flex-wrap items-center justify-center gap-3 mt-8">
-                            <span className="text-white/60 text-xs font-bold uppercase tracking-wider">XU HƯỚNG:</span>
-                            {["Chat GPT-4", "Midjourney", "Sora AI", "Jasper", "Canva Magic"].map((tag) => (
+                        {/* Search Bar */}
+                        <div className="w-full relative group">
+                            <div className="bg-white p-2 rounded-2xl rounded-tl-none md:rounded-tl-2xl shadow-2xl flex items-center min-h-[70px]">
+                                <input
+                                    type="text"
+                                    placeholder="Vui lòng nhập công cụ cần tìm kiếm..."
+                                    className="flex-1 bg-transparent px-8 py-4 text-slate-700 outline-none text-lg font-medium"
+                                    value={inputValue}
+                                    onChange={(e) => setInputValue(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                                />
                                 <button
-                                    key={tag}
-                                    onClick={() => { setInputValue(tag); onSearch(tag); }}
-                                    className="px-3 py-1 bg-white/10 hover:bg-white/20 border border-white/10 rounded-lg text-white/90 text-[11px] font-bold transition-all hover:-translate-y-0.5"
+                                    onClick={handleSearch}
+                                    className="bg-brand-orange w-[60px] h-[50px] md:w-[100px] rounded-2xl text-white flex items-center justify-center hover:brightness-110 active:scale-95 transition-all shadow-lg"
                                 >
-                                    {tag}
+                                    <Search size={28} />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* HOT Search Tags */}
+                        <div className="flex flex-wrap items-center justify-center gap-4 mt-8">
+                            <span className="text-white font-bold text-xs uppercase opacity-80">Hot search:</span>
+                            {[
+                                { name: "ChatGPT", badge: "HOT" },
+                                { name: "Midjourney", badge: "HOT" },
+                                { name: "Luma", badge: "NEW" },
+                                { name: "Stable Diffusion" },
+                                { name: "Claude" }
+                            ].map((tag) => (
+                                <button
+                                    key={tag.name}
+                                    onClick={() => { setInputValue(tag.name); onSearch(tag.name); }}
+                                    className="px-5 py-2.5 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/5 rounded-xl text-white text-[13px] font-black transition-all flex items-center gap-2 group/tag"
+                                >
+                                    {tag.name}
+                                    {tag.badge && (
+                                        <span className={`text-[8px] px-1 py-0.5 rounded-[4px] font-black ${tag.badge === 'HOT' ? 'bg-orange-500' : 'bg-yellow-400 text-slate-800'}`}>
+                                            {tag.badge}
+                                        </span>
+                                    )}
                                 </button>
                             ))}
                         </div>

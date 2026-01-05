@@ -1,9 +1,8 @@
 "use client";
 
 import {
-    LayoutGrid, PenTool, Image as ImageIcon, Video,
-    BookOpen, Briefcase, Zap, MessageSquare, Code,
-    Star, Rocket, Compass, Sparkles
+    Home, LayoutGrid, Flame, PenTool, Image as ImageIcon, Video,
+    Briefcase, Zap, MessageSquare, Code, Palette, Music, Search, Globe, ChevronRight
 } from "lucide-react";
 
 interface SidebarProps {
@@ -11,65 +10,71 @@ interface SidebarProps {
     onSelectCategory: (id: string) => void;
 }
 
-const CATEGORIES = [
-    { id: "all", label: "Tất cả công cụ", icon: <LayoutGrid size={18} /> },
-    { type: "divider", label: "DỊCH VỤ AI" },
-    { id: "chatbot", label: "Chatbot & Trợ lý", icon: <MessageSquare size={18} /> },
-    { id: "content", label: "Viết lách & Nội dung", icon: <PenTool size={18} /> },
-    { id: "image", label: "Hình ảnh & Nghệ thuật", icon: <ImageIcon size={18} /> },
-    { id: "video", label: "Video & Hoạt hình", icon: <Video size={18} /> },
-    { id: "coding", label: "Lập trình & Dev", icon: <Code size={18} /> },
-    { type: "divider", label: "CÔNG VIỆC & HỌC TẬP" },
-    { id: "office", label: "Văn phòng & Tăng năng suất", icon: <Briefcase size={18} /> },
-    { id: "learning", label: "Giáo dục & Nghiên cứu", icon: <BookOpen size={18} /> },
-    { id: "assistant", label: "Tự động hóa (Agents)", icon: <Zap size={18} /> },
-    { type: "divider", label: "KHÁM PHÁ" },
-    { id: "trending", label: "Đang thịnh hành", icon: <Rocket size={18} />, color: "text-orange-500" },
-    { id: "new", label: "Mới cập nhật", icon: <Sparkles size={18} />, color: "text-blue-500" },
-    { id: "featured", label: "Chọn lọc bởi Admin", icon: <Star size={18} />, color: "text-amber-500" },
+const MENU_ITEMS = [
+    { id: "all", label: "Tất cả công cụ", icon: <Home size={18} className="text-blue-500" />, active: true },
+    { id: "hot", label: "Ai Hot", icon: <Flame size={18} className="text-orange-500" /> },
+    { id: "content", label: "Viết nội dung", icon: <PenTool size={18} /> },
+    { id: "image", label: "Hình ảnh", icon: <ImageIcon size={18} /> },
+    { id: "video", label: "Video", icon: <Video size={18} /> },
+    { id: "office", label: "Văn phòng", icon: <Briefcase size={18} /> },
+    { id: "assistant", label: "Trợ lý & Agent", icon: <Zap size={18} /> },
+    { id: "chatbot", label: "Chatbot", icon: <MessageSquare size={18} /> },
+    { id: "coding", label: "Lập trình", icon: <Code size={18} /> },
+    { id: "design", label: "Thiết kế", icon: <Palette size={18} /> },
+    { id: "audio", label: "Âm thanh", icon: <Music size={18} /> },
+    { id: "search", label: "Tìm kiếm", icon: <Search size={18} /> },
+    { id: "platform", label: "Nền tảng AI", icon: <Globe size={18} /> },
 ];
 
 export default function Sidebar({ activeCategory, onSelectCategory }: SidebarProps) {
     return (
-        <aside className="w-[280px] hidden xl:block sticky top-[60px] h-[calc(100vh-60px)] overflow-y-auto bg-white border-r border-slate-100 py-6 px-4 shrink-0 scrollbar-thin scrollbar-thumb-slate-200">
-            <div className="flex flex-col gap-1">
-                {CATEGORIES.map((item, index) => {
-                    if (item.type === "divider") {
-                        return (
-                            <div key={`div-${index}`} className="mt-6 mb-2 px-4">
-                                <span className="text-[10px] font-black text-slate-400 tracking-widest uppercase">{item.label}</span>
-                            </div>
-                        );
-                    }
-
-                    const isActive = activeCategory === item.id;
-                    return (
-                        <button
-                            key={item.id}
-                            onClick={() => onSelectCategory(item.id as string)}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all duration-200 group ${isActive
-                                    ? "bg-blue-50 text-brand-blue-deep shadow-sm"
-                                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                                }`}
-                        >
-                            <span className={`${isActive ? "text-brand-blue-deep" : item.color || "text-slate-400 group-hover:text-slate-600"} transition-colors`}>
-                                {item.icon}
-                            </span>
-                            {item.label}
-                            {isActive && <div className="ml-auto w-1.5 h-1.5 bg-brand-blue-deep rounded-full"></div>}
-                        </button>
-                    );
-                })}
+        <aside className="w-[240px] hidden xl:flex flex-col sticky top-[60px] h-[calc(100vh-60px)] bg-white border-r border-slate-200 shrink-0 overflow-hidden">
+            {/* Sidebar Brand */}
+            <div className="p-4 border-b border-slate-50 flex items-center justify-between group cursor-pointer hover:bg-slate-50/50 transition-all">
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center overflow-hidden">
+                        <img src="https://i.ibb.co/RTDTms0C/Logo-new.png" alt="Logo" className="w-7 h-7 object-contain" />
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-brand-blue-deep font-black text-sm leading-none">Việt-AI</span>
+                        <span className="text-[9px] text-orange-500 font-bold mt-1">Điểm chạm thăng hoa</span>
+                    </div>
+                </div>
+                <ChevronRight size={14} className="text-slate-300 group-hover:translate-x-1 transition-transform" />
             </div>
 
-            {/* Bottom Promo */}
-            <div className="mt-10 p-5 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl relative overflow-hidden group">
-                <div className="relative z-10">
-                    <h4 className="text-white font-bold text-sm mb-1 leading-tight">Bạn có công cụ AI tuyệt vời?</h4>
-                    <p className="text-white/50 text-[10px] mb-3">Liên hệ với chúng tôi để đưa lên thư viện Việt-AI</p>
-                    <button className="w-full py-2 bg-brand-orange text-white text-[10px] font-black rounded-lg hover:brightness-110 transition-all">GỬI CÔNG CỤ</button>
+            {/* Menu List */}
+            <div className="flex-1 overflow-y-auto py-4 px-2 custom-scrollbar">
+                <div className="flex flex-col gap-1">
+                    {MENU_ITEMS.map((item) => {
+                        const isActive = activeCategory === item.id;
+                        return (
+                            <button
+                                key={item.id}
+                                onClick={() => onSelectCategory(item.id)}
+                                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl font-bold text-[13px] transition-all relative group ${isActive
+                                    ? "bg-blue-50 text-brand-blue-deep shadow-sm"
+                                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                                    }`}
+                            >
+                                <span className={`${isActive ? "text-brand-blue-deep" : "text-slate-400 group-hover:text-slate-600"} transition-colors`}>
+                                    {item.icon}
+                                </span>
+                                {item.label}
+                                {isActive && (
+                                    <div className="ml-auto">
+                                        <ChevronRight size={14} className="text-brand-blue-deep opacity-50" />
+                                    </div>
+                                )}
+                            </button>
+                        );
+                    })}
                 </div>
-                <div className="absolute -bottom-4 -right-4 w-20 h-20 bg-white/5 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500"></div>
+            </div>
+
+            {/* Version/Footer Info */}
+            <div className="p-4 text-center">
+                <p className="text-[10px] text-slate-300 font-bold">VIETAI WEB v1.0.2</p>
             </div>
         </aside>
     );
