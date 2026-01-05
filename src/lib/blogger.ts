@@ -10,6 +10,10 @@ export interface Tool {
     fullContent?: string;
     screenshots: string[];
     published: string;
+    lang: {
+        vi: { description: string };
+        en: { description: string };
+    };
 }
 
 export async function fetchBloggerTools(): Promise<Tool[]> {
@@ -26,31 +30,37 @@ export async function fetchBloggerTools(): Promise<Tool[]> {
             const content = entry.content.$t || "";
             const summary = entry.summary?.$t || "";
 
-            // Extract Metadata using logic from the original XML
             const title = entry.title.$t;
             const id = entry.id.$t.split("post-")[1];
             const published = entry.published.$t;
 
-            // Basic extraction from content
+            // Bóc tách Metadata
             const icon = extractFirstImage(content) || "https://i.ibb.co/RTDTms0C/Logo-new.png";
-            const websiteUrl = extractMeta(content, "url") || extractMeta(content, "Link") || "#";
-            const price = extractMeta(content, "price") || "Free";
+            const websiteUrl = extractMeta(content, ["url", "link", "website"]) || "#";
+            const price = extractMeta(content, ["price", "giá", "cost"]) || "Free";
 
             const categories = entry.category?.map((cat: any) => cat.term) || [];
-            const description = extractDescription(content, summary);
-            const screenshots = extractScreenshots(content);
+
+            // Logic đa ngôn ngữ
+            const langContent = splitLanguage(content);
+            const viDesc = cleanText(langContent.vi || extractPureDescription(content, summary));
+            const enDesc = cleanText(langContent.en || viDesc);
 
             return {
                 id,
                 title,
-                description,
+                description: viDesc, // Mặc định hiển thị tiếng Việt
                 url: websiteUrl,
                 icon,
                 price,
                 categories,
                 tags: categories,
-                screenshots,
-                published
+                screenshots: extractScreenshots(content),
+                published,
+                lang: {
+                    vi: { description: viDesc },
+                    en: { description: enDesc }
+                }
             };
         });
     } catch (error) {
@@ -59,21 +69,48 @@ export async function fetchBloggerTools(): Promise<Tool[]> {
     }
 }
 
-function extractMeta(content: string, key: string) {
-    const regex = new RegExp(key + ':\\s*([^\\n<]+)', 'i');
-    const match = content.match(regex);
-    return match ? match[1].trim() : '';
+function extractMeta(content: string, keys: string[]) {
+    for (const key of keys) {
+        const regex = new RegExp(key + ':\\s*([^\\n<]+)', 'i');
+        const match = content.match(regex);
+        if (match) return match[1].trim();
+    }
+    return '';
 }
 
-function extractDescription(content: string, summary: string) {
-    const metaIndex = content.indexOf('---META---');
-    let text = "";
-    if (metaIndex > 0) {
-        text = content.substring(0, metaIndex);
-    } else {
-        text = summary || content;
+function splitLanguage(content: string) {
+    const viMatch = content.match(/---VI---([\s\S]*?)(---EN---|---META---|---SCREENSHOTS---|---END---|$)/i);
+    const enMatch = content.match(/---EN---([\s\S]*?)(---VI---|---META---|---SCREENSHOTS---|---END---|$)/i);
+    return {
+        vi: viMatch ? viMatch[1].trim() : "",
+        en: enMatch ? enMatch[1].trim() : ""
+    };
+}
+
+function extractPureDescription(content: string, summary: string) {
+    const markers = ['---META---', '---SCREENSHOTS---', '---VI---', '---EN---', '---NOTE---'];
+    let text = content;
+
+    // Tìm marker xuất hiện sớm nhất
+    let firstMarkerIndex = text.length;
+    markers.forEach(m => {
+        const idx = text.indexOf(m);
+        if (idx !== -1 && idx < firstMarkerIndex) firstMarkerIndex = idx;
+    });
+
+    if (firstMarkerIndex < text.length) {
+        text = text.substring(0, firstMarkerIndex);
     }
-    return text.replace(/<[^>]*>/g, '').substring(0, 200).trim() + '...';
+
+    return text || summary;
+}
+
+function cleanText(html: string) {
+    return html
+        .replace(/<[^>]*>/g, '') // Loại bỏ tag HTML
+        .replace(/\s+/g, ' ')    // Nén khoảng trắng
+        .substring(0, 250)       // Giới hạn độ dài
+        .trim() + '...';
 }
 
 function extractFirstImage(content: string) {
@@ -82,9 +119,11 @@ function extractFirstImage(content: string) {
 }
 
 function extractScreenshots(content: string) {
-    const match = content.match(/---SCREENSHOTS---([\s\S]*?)---END---/);
+    const match = content.match(/---SCREENSHOTS---([\s\S]*?)---END---/i);
     if (match) {
-        return match[1].trim().split('\n').map(url => url.trim().replace(/<[^>]*>/g, '')).filter(url => url.startsWith('http'));
+        return match[1].trim().split('\n')
+            .map(url => url.replace(/<[^>]*>/g, '').trim())
+            .filter(url => url.startsWith('http'));
     }
     return [];
 }
