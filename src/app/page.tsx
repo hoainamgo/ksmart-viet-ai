@@ -38,15 +38,30 @@ export default function Home() {
         let result = tools;
 
         if (activeCategory !== "all") {
-            // Very simple mapping for demo, usually category logic is more complex
+            // Logic lọc thông minh: Map ID categories với nhãn (labels) trên Blogger
+            const categoryMap: Record<string, string[]> = {
+                'content': ['viết', 'content', 'copywriting', 'văn bản'],
+                'image': ['ảnh', 'image', 'vẽ', 'chụp'],
+                'video': ['video', 'phim', 'clip'],
+                'learning': ['học', 'tài liệu', 'nghiên cứu', 'khoa học'],
+                'office': ['văn phòng', 'office', 'công việc', 'work'],
+                'assistant': ['trợ lý', 'assistant', 'agent', 'zapier'],
+                'chatbot': ['chatbot', 'gpt', 'hội thoại'],
+                'coding': ['code', 'lập trình', 'developer', 'github'],
+            };
+
+            const keywords = categoryMap[activeCategory] || [activeCategory];
+
             result = result.filter(tool =>
-                tool.categories.some(cat => cat.toLowerCase().includes(activeCategory.toLowerCase()))
+                tool.categories.some(cat =>
+                    keywords.some(key => cat.toLowerCase().includes(key.toLowerCase()))
+                )
             );
         }
 
         if (searchTerm) {
             const searchResult = fuse.search(searchTerm);
-            result = searchResult.map(res => res.item);
+            result = searchResult.map((res: Fuse.FuseResult<Tool>) => res.item);
         }
 
         setFilteredTools(result);
