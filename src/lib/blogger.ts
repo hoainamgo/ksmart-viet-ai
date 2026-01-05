@@ -26,7 +26,7 @@ export async function fetchBloggerTools(): Promise<Tool[]> {
         const data = await response.json();
         const entries = data.feed.entry || [];
 
-        return entries.map((entry: any) => {
+        const tools = entries.map((entry: any) => {
             const content = entry.content.$t || "";
             const summary = entry.summary?.$t || "";
 
@@ -63,6 +63,8 @@ export async function fetchBloggerTools(): Promise<Tool[]> {
                 }
             };
         });
+
+        return tools;
     } catch (error) {
         console.error("Error loading Blogger tools:", error);
         return [];
