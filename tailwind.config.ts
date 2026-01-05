@@ -10,11 +10,13 @@ const config: Config = {
         extend: {
             colors: {
                 brand: {
-                    blue: "#4361ee",
-                    orange: "#ff6b35",
-                    headerStart: "#4169e1",
-                    headerEnd: "#2d3dcc",
+                    "blue-light": "#4169E1",
+                    "blue-deep": "#2D3DCC",
+                    "orange": "#FF5C00",
                 },
+            },
+            screens: {
+                '3xl': '1920px',
             },
         },
     },
