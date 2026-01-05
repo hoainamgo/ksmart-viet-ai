@@ -16,7 +16,7 @@ export default function Hero({ onSearch }: HeroProps) {
     };
 
     return (
-        <section className="p-4 md:p-6 lg:p-10 bg-[#eaedf1]">
+        <div className="p-4 md:p-6 lg:p-10 w-full">
             <div className="bg-hero-gradient rounded-[40px] overflow-hidden relative shadow-2xl min-h-[400px] flex flex-col items-center justify-center py-16 px-6">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-20">
@@ -93,6 +93,6 @@ export default function Hero({ onSearch }: HeroProps) {
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
     );
 }

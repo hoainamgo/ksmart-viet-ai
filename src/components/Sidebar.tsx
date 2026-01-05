@@ -2,7 +2,8 @@
 
 import {
     Home, LayoutGrid, Flame, PenTool, Image as ImageIcon, Video,
-    Briefcase, Zap, MessageSquare, Code, Palette, Music, Search, Globe, ChevronRight
+    Briefcase, Zap, MessageSquare, Code, Palette, Music, Search, Globe, ChevronRight,
+    Book, Brain, BarChart3, CheckCircle2, FileText
 } from "lucide-react";
 
 interface SidebarProps {
@@ -24,11 +25,16 @@ const MENU_ITEMS = [
     { id: "audio", label: "Âm thanh", icon: <Music size={18} /> },
     { id: "search", label: "Tìm kiếm", icon: <Search size={18} /> },
     { id: "platform", label: "Nền tảng AI", icon: <Globe size={18} /> },
+    { id: "learn", label: "Học & Tài nguyên", icon: <Book size={18} /> },
+    { id: "training", label: "Huấn luyện mô hình", icon: <Brain size={18} /> },
+    { id: "eval", label: "Đánh giá mô hình", icon: <BarChart3 size={18} /> },
+    { id: "check", label: "Kiểm tra nội dung", icon: <CheckCircle2 size={18} /> },
+    { id: "prompt", label: "Prompt", icon: <FileText size={18} /> },
 ];
 
 export default function Sidebar({ activeCategory, onSelectCategory }: SidebarProps) {
     return (
-        <aside className="w-[240px] hidden xl:flex flex-col sticky top-[60px] h-[calc(100vh-60px)] bg-white border-r border-slate-200 shrink-0 overflow-hidden">
+        <aside className="w-[260px] hidden xl:flex flex-col sticky top-[60px] h-[calc(100vh-60px)] bg-white border-r border-slate-200 shrink-0 overflow-y-auto custom-scrollbar">
             {/* Sidebar Brand */}
             <div className="p-4 border-b border-slate-50 flex items-center justify-between group cursor-pointer hover:bg-slate-50/50 transition-all">
                 <div className="flex items-center gap-3">

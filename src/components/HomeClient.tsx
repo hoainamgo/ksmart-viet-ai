@@ -11,7 +11,7 @@ import Fuse from "fuse.js";
 import {
     ChevronRight, LayoutGrid, Flame, PenTool, Image as ImageIcon, Video,
     Briefcase, Zap, MessageSquare, Code, Rocket, Sparkles, Star, ArrowRight,
-    Palette, Music, Search, Globe
+    Palette, Music, Search, Globe, Book, Brain, BarChart3, CheckCircle2, FileText
 } from "lucide-react";
 
 interface HomeClientProps {
@@ -31,6 +31,11 @@ const CATEGORIES_CONFIG = [
     { id: "audio", label: "Âm thanh", icon: <Music size={20} className="text-cyan-500" />, keywords: ['âm thanh', 'audio', 'nhạc'] },
     { id: "search", label: "Tìm kiếm", icon: <Search size={20} className="text-sky-500" />, keywords: ['tìm kiếm', 'search'] },
     { id: "platform", label: "Nền tảng AI", icon: <Globe size={20} className="text-amber-500" />, keywords: ['nền tảng', 'platform', 'hệ sinh thái'] },
+    { id: "learn", label: "Học & Tài nguyên", icon: <Book size={20} className="text-lime-600" />, keywords: ['học', 'tài nguyên', 'learn'] },
+    { id: "training", label: "Huấn luyện mô hình", icon: <Brain size={20} className="text-violet-500" />, keywords: ['huấn luyện', 'mô hình', 'training'] },
+    { id: "eval", label: "Đánh giá mô hình", icon: <BarChart3 size={20} className="text-rose-500" />, keywords: ['đánh giá', 'eval', 'benchmark'] },
+    { id: "check", label: "Kiểm tra nội dung", icon: <CheckCircle2 size={20} className="text-teal-500" />, keywords: ['kiểm tra', 'check', 'detector'] },
+    { id: "prompt", label: "Prompt", icon: <FileText size={20} className="text-orange-600" />, keywords: ['prompt', 'lệnh', 'câu lệnh'] },
 ];
 
 export default function HomeClient({ initialTools }: HomeClientProps) {
@@ -99,10 +104,8 @@ export default function HomeClient({ initialTools }: HomeClientProps) {
         <div className="flex flex-col min-h-screen bg-[#F0F2F5]">
             <Header />
 
-            <main className="flex-grow flex flex-col">
-                <Hero onSearch={setSearchTerm} />
-
-                <div className="max-w-[1920px] w-full mx-auto flex flex-1">
+            <main className="flex-grow flex flex-col bg-[#F0F2F5]">
+                <div className="max-w-[1920px] w-full mx-auto flex flex-1 relative">
                     <Sidebar
                         activeCategory={activeCategory}
                         onSelectCategory={(id) => {
@@ -111,50 +114,54 @@ export default function HomeClient({ initialTools }: HomeClientProps) {
                         }}
                     />
 
-                    <section className="flex-1 p-4 md:p-6 lg:p-10">
-                        {searchTerm ? (
-                            <div>
-                                <div className="flex items-center justify-between mb-8 px-2">
-                                    <h2 className="text-2xl font-black text-slate-800 uppercase">
-                                        Kết quả cho "{searchTerm}"
-                                    </h2>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
-                                    {filteredTools.map((tool) => (
-                                        <ToolCard key={tool.id} tool={tool} />
-                                    ))}
-                                </div>
-                            </div>
-                        ) : activeCategory === "all" ? (
-                            <>
-                                {/* Show all grouped sections for Home page */}
-                                {CATEGORIES_CONFIG.map(cat =>
-                                    renderToolsInSection(cat.id, cat.label, cat.icon, cat.keywords)
-                                )}
-                            </>
-                        ) : (
-                            /* Show specific category as a section */
-                            renderToolsInSection(
-                                activeCategory,
-                                CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.label || activeCategory,
-                                CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.icon,
-                                CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.keywords || [activeCategory]
-                            )
-                        )}
+                    <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+                        <Hero onSearch={setSearchTerm} />
 
-                        {searchTerm && filteredTools.length === 0 && (
-                            <div className="col-span-full py-40 flex flex-col items-center">
-                                <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-5xl mb-6 grayscale opacity-50">🔍</div>
-                                <h3 className="text-xl font-black text-slate-700">Rất tiếc, không tìm thấy kết quả</h3>
-                                <button
-                                    onClick={() => setSearchTerm("")}
-                                    className="mt-6 px-6 py-2 bg-brand-blue-deep text-white text-xs font-black rounded-xl hover:scale-105 transition-all"
-                                >
-                                    XÓA TÌM KIẾM
-                                </button>
-                            </div>
-                        )}
-                    </section>
+                        <section className="p-4 md:p-6 lg:p-10">
+                            {searchTerm ? (
+                                <div>
+                                    <div className="flex items-center justify-between mb-8 px-2">
+                                        <h2 className="text-2xl font-black text-slate-800 uppercase">
+                                            Kết quả cho "{searchTerm}"
+                                        </h2>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 3xl:grid-cols-6 gap-6">
+                                        {filteredTools.map((tool) => (
+                                            <ToolCard key={tool.id} tool={tool} />
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : activeCategory === "all" ? (
+                                <>
+                                    {/* Show all grouped sections for Home page */}
+                                    {CATEGORIES_CONFIG.map(cat =>
+                                        renderToolsInSection(cat.id, cat.label, cat.icon, cat.keywords)
+                                    )}
+                                </>
+                            ) : (
+                                /* Show specific category as a section */
+                                renderToolsInSection(
+                                    activeCategory,
+                                    CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.label || activeCategory,
+                                    CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.icon,
+                                    CATEGORIES_CONFIG.find(c => c.id === activeCategory)?.keywords || [activeCategory]
+                                )
+                            )}
+
+                            {searchTerm && filteredTools.length === 0 && (
+                                <div className="col-span-full py-40 flex flex-col items-center">
+                                    <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center text-5xl mb-6 grayscale opacity-50">🔍</div>
+                                    <h3 className="text-xl font-black text-slate-700">Rất tiếc, không tìm thấy kết quả</h3>
+                                    <button
+                                        onClick={() => setSearchTerm("")}
+                                        className="mt-6 px-6 py-2 bg-brand-blue-deep text-white text-xs font-black rounded-xl hover:scale-105 transition-all"
+                                    >
+                                        XÓA TÌM KIẾM
+                                    </button>
+                                </div>
+                            )}
+                        </section>
+                    </div>
                 </div>
             </main>
 
