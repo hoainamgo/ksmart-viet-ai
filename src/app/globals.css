@@ -3,18 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --brand-blue-light: #4169E1;
+  --brand-blue-deep: #2D3DCC;
+  --brand-blue-hero-start: #3B5BDB;
+  --brand-blue-hero-mid: #4C6EF5;
+  --brand-blue-hero-end: #5C7CFA;
+  --brand-orange: #FF5C00;
+  --brand-red-hot: #FF6B6B;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: #f0f2f5;
+  background-color: #f0f2f5;
+  color: #333;
+  @apply min-h-screen flex flex-col;
 }
 
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+.bg-header-gradient {
+  background: linear-gradient(135deg, var(--brand-blue-light) 0%, var(--brand-blue-deep) 100%);
+}
+
+.bg-hero-gradient {
+  background: linear-gradient(135deg, var(--brand-blue-hero-start) 0%, var(--brand-blue-hero-mid) 50%, var(--brand-blue-hero-end) 100%);
+}
+
+.btn-orange {
+  background-color: var(--brand-orange);
+  color: white;
+  @apply transition-all duration-300;
+}
+
+.btn-orange:hover {
+  @apply -translate-y-0.5 shadow-lg;
+  box-shadow: 0 4px 15px rgba(255, 92, 0, 0.4);
+}
+
+.card-hover-lift {
+  @apply transition-all duration-300;
+}
+
+.card-hover-lift:hover {
+  @apply -translate-y-1.5 shadow-2xl;
 }

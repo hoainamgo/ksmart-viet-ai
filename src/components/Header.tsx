@@ -1,36 +1,53 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search, Menu, Globe } from "lucide-react";
+import Link from "next/link";
+import { Search, Heart, MessageCircle, ExternalLink, Menu } from "lucide-react";
 
 export default function Header() {
     return (
-        <header className="fixed top-0 left-0 right-0 h-[60px] bg-gradient-to-r from-brand-headerStart to-brand-headerEnd z-50 flex items-center px-4 md:px-10 justify-between shadow-lg">
-            <div className="flex items-center gap-4">
-                <button className="p-2 hover:bg-white/20 rounded-lg lg:hidden">
-                    <Menu className="text-white" />
-                </button>
-                <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-black text-white tracking-tighter">Việt-AI</span>
-                    <span className="text-white/80 text-xs font-semibold">.online</span>
+        <header className="bg-header-gradient h-[60px] sticky top-0 z-[1000] shadow-md border-b border-white/10">
+            <div className="max-w-[1400px] mx-auto h-full px-5 md:px-10 flex items-center justify-between">
+                {/* Left: Brand */}
+                <div className="flex items-center gap-4">
+                    <button className="p-2 bg-white/10 border border-white/20 rounded-xl hover:bg-white hover:text-brand-orange transition-all md:hidden">
+                        <Menu size={20} className="text-white" />
+                    </button>
+                    <Link href="/" className="flex items-center gap-2">
+                        <span className="text-white text-2xl font-black tracking-tighter">VIỆT-AI</span>
+                        <span className="hidden sm:inline text-white/80 text-xs font-bold mt-1 tracking-widest uppercase">.online</span>
+                    </Link>
                 </div>
-            </div>
 
-            <nav className="hidden lg:flex items-center gap-8">
-                {['Trang chủ', 'Tin tức', 'AI Hot', 'Giới thiệu'].map((item) => (
-                    <a key={item} href="#" className="text-white/90 hover:text-white font-semibold text-sm transition-opacity">
-                        {item}
-                    </a>
-                ))}
-            </nav>
+                {/* Center: Navigation */}
+                <nav className="hidden lg:block">
+                    <ul className="flex items-center gap-8">
+                        <li><Link href="/" className="text-white font-bold text-sm relative opacity-100 after:content-[''] after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-[3px] after:bg-white after:rounded-full">THƯ VIỆN</Link></li>
+                        <li><Link href="#" className="text-white/80 font-bold text-sm hover:opacity-100 transition-opacity">KHÓA HỌC</Link></li>
+                        <li><Link href="#" className="text-white/80 font-bold text-sm hover:opacity-100 transition-opacity">CỘNG ĐỒNG</Link></li>
+                        <li>
+                            <Link href="#" className="text-white/80 font-bold text-sm hover:opacity-100 transition-opacity relative group">
+                                TIN TỨC
+                                <span className="absolute -top-3 -right-6 bg-red-400 text-[9px] px-1.5 py-0.5 rounded-sm font-black animate-pulse">HOT</span>
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
 
-            <div className="flex items-center gap-4">
-                <button className="bg-white/10 hover:bg-white/20 p-2 rounded-full text-white transition-all">
-                    <Globe size={20} />
-                </button>
-                <div className="hidden sm:flex items-center gap-2 bg-white px-3 py-1.5 rounded-lg">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    <span className="text-xs font-bold text-slate-700 uppercase">Pro Version</span>
+                {/* Right: Utilities */}
+                <div className="flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-2 bg-white/10 p-1 rounded-lg border border-white/10">
+                        <Link href="#" className="p-2 hover:bg-white hover:text-blue-600 rounded-md transition-all text-white">
+                            <MessageCircle size={18} />
+                        </Link>
+                        <Link href="#" className="p-2 hover:bg-white hover:text-red-500 rounded-md transition-all text-white">
+                            <Heart size={18} />
+                        </Link>
+                    </div>
+
+                    <Link href="#" className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl text-brand-blue-deep font-bold text-sm hover:-translate-y-0.5 transition-all shadow-sm">
+                        <div className="w-6 h-6 bg-brand-blue-deep rounded-lg flex items-center justify-center text-white text-[10px]">PRO</div>
+                        <span className="hidden sm:inline">Nâng cấp</span>
+                    </Link>
                 </div>
             </div>
         </header>
